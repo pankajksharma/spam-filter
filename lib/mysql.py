@@ -1,3 +1,3 @@
 import MySQLdb
 
-connection = MySQLdb.connect('localhost', 'root', 'root', 'mining')
+connection = MySQLdb.connect('localhost', 'root', 'kgggdkp2692', 'mining')

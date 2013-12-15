@@ -25,7 +25,10 @@ def get_ips(text):
 	return re.findall(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', text)
 
 def get_email(text):
-	return re.findall(r'[\w|\.]+@[\w|\.]+', text)[0]
+	try:
+		return re.findall(r'[\w|\.]+@[\w|\.]+', text)[0]
+	except:
+		return ''
 
 all_files = get_files(DATA_DIR)
 for file in all_files:
@@ -37,7 +40,10 @@ for file in all_files:
 	if msg.is_multipart():
 	    for payload in msg.get_payload():
 	    	for p in payload.get_payload():
-	        	body += p.get_payload()
+			try:
+	        		body += p.get_payload()
+			except:
+				body += str(p)
 	else:
 	    body = msg.get_payload()
 	try:
@@ -59,6 +65,6 @@ for file in all_files:
 	for char in UNWANTED_CHARS:
 		body.replace(char, '')
 	body = DataClean(body).GetData()
-	query = "INSERT INTO `data_mail` (`path`,`data`, `meta-data`) VALUES ('%s','%s','%s')" %(file, json.dumps(body).replace('\'', '\\\''), json.dumps(meta_data).replace('\'', '\\\''))
+	query = "INSERT INTO `data_mail` (`path`,`data`, `meta-data`) VALUES ('%s','%s','%s')" %(file, json.dumps(str(body)).replace('\'', '\\\''), json.dumps(str(meta_data)).replace('\'', '\\\''))
 	cursor.execute(query)
 	connection.commit()
